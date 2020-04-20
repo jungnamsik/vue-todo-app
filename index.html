@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app">
+
+        <input type="text" v-model="inputText" v-on:keyup.enter="addItem">
+        <button v-on:click="addItem">add</button>
+        <!-- <button v-on:click="fetchItems">fetchItems</button> -->
+
+        <div>
+            {{items}}
+        </div>
+
+        <ul>
+            <li v-for="(item, index) in items">
+                {{item}} <button v-on:click="removeItem(item, index)">remove</button>
+            </li>
+        </ul>
+
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script>
+        new Vue({
+            el: '#app'
+            ,created: function () {
+                this.fetchItems();
+            }
+            ,data: {
+                inputText : ""
+                ,items : []
+            }
+            
+            ,methods : {
+                removeItem: function (item, index) {
+                    console.log(item, index);
+                    this.items.splice(index, 1) ;
+                    localStorage.removeItem(item) ;
+                }
+                ,addItem: function(event) {
+                    var val = this.inputText ;
+                    console.log("inputText>>>",val);
+                    localStorage.setItem(val, val) ;
+                    this.inputText = '';
+                    this.items.push(val);
+                }
+                ,fetchItems : function () {
+                    // for (x in localStorage) console.log("local>>",x, localStorage[x]);
+                    for (var i=0;i<localStorage.length;i++) {
+                        var value = localStorage.key(i)
+                        console.log(value);
+                        this.items.push(value) ;
+                        
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
